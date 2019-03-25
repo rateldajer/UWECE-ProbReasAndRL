@@ -2,12 +2,21 @@
 layout: post
 title: Contents
 ---
-<span class="newthought">These notes</span> form a concise introductory course on probabilistic graphical models{% include sidenote.html id="note-pgm" note="Probabilistic graphical models are a subfield of machine learning that studies how to describe and reason about the world in terms of probabilities." %}.
-They are based on Stanford [CS228](https://cs228.stanford.edu/), and are written by [Volodymyr Kuleshov](http://www.stanford.edu/~kuleshov) and [Stefano Ermon](http://cs.stanford.edu/~ermon/), with the [help](https://github.com/ermongroup/cs228-notes/commits/master) of many students and course staff.
-{% include marginnote.html id='mn-construction' note='The notes are still **under construction**! Although we have written up most of the material, you will probably find several typos. If you do, please let us know, or submit a pull request with your fixes to our [GitHub repository](https://github.com/ermongroup/cs228-notes).'%}
-You too may help make these notes better by submitting your improvements to us via [GitHub](https://github.com/ermongroup/cs228-notes).
+<span class="newthought">These notes</span> provide a resource for an introductory course on probabilistic reasoning and decision making{% include sidenote.html id="note-test" note="test side note" %}.
+They are gathered from a variety of sources including
+- Stanford [CS228](https://cs228.stanford.edu/) which were originally written by [Volodymyr Kuleshov](http://www.stanford.edu/~kuleshov) and [Stefano Ermon](http://cs.stanford.edu/~ermon/), with the [help](https://github.com/ermongroup/cs228-notes/commits/master) of many students and course staff.
+- others texts.... TODO
 
-This course starts by introducing probabilistic graphical models from the very basics and concludes by explaining from first principles the [variational auto-encoder](extras/vae), an important probabilistic model that is also one of the most influential recent results in deep learning.
+
+<!-- TODO : update this note -->
+{% include marginnote.html id='mn-construction' note='The notes are still **under construction**! Although we have written up a lot of the material, you will probably find several and errors. If you do, please let us know (or submit a pull request with your fixes).'%}
+<!--You too may help make these notes better by submitting your improvements to us via [GitHub](https://github.com/ermongroup/cs228-notes).-->
+
+The field of Artificial Intelligence intersects many areas of knowledge which engineers can utilize for building robust, dynamic systems in a world filled with large amounts of data yet also containing uncertainty and hidden information. In this course we focus from the ground up on the concepts and skills needed to build systems that can reason, learn and make decisions using probabilistic reasoning. This begins with reviewing concepts from Bayesian probability and learning how to perform probabilistic inference with exact and more efficient approximate methods such as MCMC.
+
+In the first half of the course we will explore two practical approaches to utilizing these concepts for reasoning : Probabilistic Programming and Probabilistic Graphical Models (PGMs). These methods can also be used to reason about decisions, for example using Influence Diagrams. In the second half of the course we will look at how to use a probabilistic model to optimize decisions based on data collected through experimentation or interaction with the environment. A basic form of this often used for A/B testing is Thompson Sampling for solving Multi-Armed Bandit (MAB) problems where probability distributions and decision making are combined in the simplest way. 
+
+Reinforcement Learning (RL) is a much more general framework for decision making where we agents learn how to act from their environment without any prior knowledge of how the world works or possible outcomes. We will explore the classic definitions and algorithms for RL and see how it has been revolutionized in recent years through the use of Deep Learning. Recently, impressive AI algorithms have been demonstrated which combine all of these concepts along with Monte-Carlo Tree Search to learn to play video games (such as Star Craft) and board games (such as Go and chess) from scratch. More practical applications of these methods are used regularly in areas such as customer behaviour modelling, traffic control, automatic server configuration, autonomous driving and robotics.
 
 ## Preliminaries
 
@@ -19,9 +28,12 @@ This course starts by introducing probabilistic graphical models from the very b
 
 ## Representation
 
-1. [Bayesian networks](representation/directed/): Definitions. Representations via directed graphs. Independencies in directed models.
+1. [Bayesian networks](representation/directed/): Definitions. Representations via directed graphs. Independencies in directed models. 
 
 2. [Markov random fields](representation/undirected/): Undirected vs directed models. Independencies in undirected models. Conditional random fields.
+
+1. [PGM Examples](representation/examples/) 
+
 
 ## Inference
 
@@ -29,11 +41,11 @@ This course starts by introducing probabilistic graphical models from the very b
 
 2. [Belief propagation](inference/jt/): The junction tree algorithm. Exact inference in arbitrary graphs. Loopy Belief Propagation.
 
-3. [MAP inference](inference/map/): Max-sum message passing. Graphcuts. Linear programming relaxations. Dual decomposition.
+3. [MAP inference](inference/map/): Max-sum message passing. Graphcuts. Linear programming relaxations. Dual decomposition. TODO: shorten this, no need to go into so much detail
 
 4. [Sampling-based inference](inference/sampling/): Monte-Carlo sampling. Importance sampling. Markov Chain Monte-Carlo. Applications in inference.
 
-5. [Variational inference](inference/variational/): Variational lower bounds. Mean Field. Marginal polytope and its relaxations.
+<!--5. [Variational inference](inference/variational/): Variational lower bounds. Mean Field. Marginal polytope and its relaxations.-->
 
 ## Learning
 
@@ -41,14 +53,47 @@ This course starts by introducing probabilistic graphical models from the very b
 
 2. [Learning in undirected models](learning/undirected/): Exponential families. Maximum likelihood estimation with gradient descent. Learning in CRFs
 
-3. [Learning in latent variable models](learning/latent/): Latent variable models. Gaussian mixture models. Expectation maximization.
+<!-- 3. [Learning in latent variable models](learning/latent/): Latent variable models. Gaussian mixture models. Expectation maximization.-->
 
-4. [Bayesian learning](learning/bayesian/): Bayesian paradigm. Conjugate priors. Examples (*under construction*).
+4. [Bayesian learning](learning/bayesian/): Bayesian paradigm. Conjugate priors. Examples (*under construction*). TODO: simplified basics, enough to get MABs
 
-5. [Structure learning](learning/structure/): Chow-Liu algorithm. Akaike information criterion. Bayesian information criterion. Bayesian structure learning (*under construction*).
+<!-- 5. [Structure learning](learning/structure/): Chow-Liu algorithm. Akaike information criterion. Bayesian information criterion. Bayesian structure learning (*under construction*).-->
 
-## Bringing it all together
+## Towards Decision Making
+1. [Causation vs Correlation](causality/): how to model probabilistic causal relationships, relation to decision making 
+1. Bayesian Optimization (Upper Confidence Bounds, Multi-armed bandits, Thompson Sampling) 
 
-1. [The variational autoencoder](extras/vae): Deep generative models. The reparametrization trick. Learning latent visual representations.
+## Decision Making Under Uncertainty
+1. Markov Decision Processes (MDPs)
+1. Influence Diagrams
+1. Multi-armed bandits (MAB)
+1. Monte-Carlo Tree Search
 
-2. [List of further readings](extras/readings): Structured support vector machines. Bayesian non-parametrics.
+## Deep Reinforcement Learning
+1. Basics of Neural Networks (training, back-propagation, gradient descent, regularization methods)
+1. Deep Learning (training methods, relevant architectures for Reinforcement Learning, fully connected feed forward networks)
+1. Reinforcement Learning (RL) (theory, Bellman equations, Value/Policy Iteration, TD methods, Q-learning, SARSA, policy gradients, actor-critic methods)
+1. Function approximation for RL (classic methods, Deep Learning)
+1. Deep RL : Deep Q- Networks (DQN), A3C, A2C, …
+
+
+
+<!--1. [The variational autoencoder](extras/vae): Deep generative models. The reparametrization trick. Learning latent visual representations.-->
+
+<!--2. [List of further readings](extras/readings): Structured support vector machines. Bayesian non-parametrics.-->
+
+# Actual Course Outline
+1. Motivation and Context: Importance of reasoning and decision making about uncertainty
+1. Probabilistic Modelling (Bayesian vs Frequentist approaches, conditional probability rules, Bayes rule, expectation, variance, etc.) 
+1. Methods of approximate inference: marginal, Maximum a posteriori (MAP), Monte-Carlo Markov Chain (MCMC) estimation 
+1. Identifying generalization error, risk, regret 
+1. Probabilistic Graphical Models (PGMs) (Bayesian Networks, Markov Random Fields, Conditional Random Fields) 
+1. Probabilistic programming as an alternative approach to PGMs 
+1. Causation vs Correlation: how to model probabilistic causal relationships, relation to decision making 
+1. Bayesian Optimization (Upper Confidence Bounds, Multi-armed bandits, Thompson Sampling) 
+1. Decision making under uncertainty: Markov Decision Processes (MDPs), Influence Diagrams, Multi-armed bandits (MAB), Monte-Carlo Tree Search
+1. Basics of Neural Networks (training, back-propagation, gradient descent, regularization methods)
+1. Deep Learning (training methods, relevant architectures for Reinforcement Learning, fully connected feed forward networks)
+1. Reinforcement Learning (RL) (theory, Bellman equations, Value/Policy Iteration, TD methods, Q-learning, SARSA, policy gradients, actor-critic methods)
+1. Function approximation for RL (classic methods, Deep Learning)
+1. Deep RL : Deep Q- Networks (DQN), A3C, A2C, …
