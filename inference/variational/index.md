@@ -54,14 +54,14 @@ Given this formulation, optimizing $$KL(q\|p)$$ directly is not possible because
 
 Instead, we will work with the following objective, which has the same form as the KL divergence, but only involves the unnormalized probability $$\tp = \prod_{k} \phi_k(x_k; \theta) $$:
 
-$$ J(q) = \sum_x q(x) \log \frac{q(x)} \tp(x). $$
+$$ J(q) = \sum_x q(x) \log \frac{q(x)}{\tp(x)}. $$
 
 This function is not only tractable, it also has the following important property:
 
 $$
 \begin{align*}
 J(q)
-&= \sum_x q(x) \log \frac{q(x)} \tp(x) \\
+&= \sum_x q(x) \log \frac{q(x)} {\tp(x)} \\
 &= \sum_x q(x) \log \frac{q(x)}{p(x)} - \log Z(\theta) \\
 &= KL(q\|p) - \log Z(\theta)
 \end{align*}
@@ -71,7 +71,7 @@ Since $$ KL(q\|p) \geq 0 $$, we get by rearranging terms that
 
 $$ \log Z(\theta) = KL(q\|p) - J(q) \geq -J(q). $$
 
-Thus, $$-J(q)$$ is a *lower bound* on the partition function $$Z(\theta)$$. In many cases, $$Z(\theta)$$ has an interesting interpretation. For example, we may be trying to compute the marginal probability $$p(x \mid D) = p(x,D) / p(D)$$ of variables $$x$$ given observed data $$D$$ that plays the role of evidence. We assume that $$p(x,D)$$ is directed. In this case, minimizing $$J(q)$$ amounts to maximizing a lower bound on the log-likelihood $$\log p(D)$$ of the observed data.
+Thus, $$-J(q)$$ is a *lower bound* on the log partition function $$\log Z(\theta)$$. In many cases, $$Z(\theta)$$ has an interesting interpretation. For example, we may be trying to compute the marginal probability $$p(x \mid D) = p(x,D) / p(D)$$ of variables $$x$$ given observed data $$D$$ that plays the role of evidence. We assume that $$p(x,D)$$ is directed. In this case, minimizing $$J(q)$$ amounts to maximizing a lower bound on the log-likelihood $$\log p(D)$$ of the observed data.
 
 Because of this property, $$-J(q)$$ is called the variational lower bound or the evidence lower bound (ELBO); it often written in the form
 
@@ -129,7 +129,7 @@ $$ \log \tp(x) = \sum_k \log \phi(x_k) $$
 
 Of these, only factors belonging to the Markov blanket of $$x_j$$ are a function of $$x_j$$ (simply by the definition of the Markov blanket); the rest are constant with respect to $$x_j$$ and can be pushed into the constant term.
 
-This leaves us with an expectation over a much smaller number of factors; if the Markov blanket of $$x_j$$ is small (as is often the case), we are able to analytically compute $$q(x_j)$$. For example, if the variables are discrete with $$K$$ possible values, and there are $$F$$ factors and $$N$$ variables in the Markov blanket of $$x_j$$, then computing the expectation takes $$O(K F N^K)$$ time: for each value of $$x_j$$ we sum over all $$N^K$$ assignments of the $$N$$ variables, and in each case, we sum over the $$F$$ factors.
+This leaves us with an expectation over a much smaller number of factors; if the Markov blanket of $$x_j$$ is small (as is often the case), we are able to analytically compute $$q(x_j)$$. For example, if the variables are discrete with $$K$$ possible values, and there are $$F$$ factors and $$N$$ variables in the Markov blanket of $$x_j$$, then computing the expectation takes $$O(K F K^N)$$ time: for each value of $$x_j$$ we sum over all $$K^N$$ assignments of the $$N$$ variables, and in each case, we sum over the $$F$$ factors.
 
 The result of this is a procedure that iteratively fits a fully-factored $$q(x) = q_1(x_1) q_2(x_2) \cdots q_n(x_n)$$ that approximates $$p$$ in terms of $$KL(q\|p)$$. After each step of coordinate descent, we increase the variational lower bound, tightening it around $$\log Z(\theta)$$.
 

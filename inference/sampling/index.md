@@ -19,7 +19,7 @@ Sampling, in general, is not an easy problem. Our computers can only generate sa
 In our case, we may reduce sampling from a multinomial variable to sampling a single uniform variable by subdividing a unit interval into $$k$$ regions with region $$i$$ having size $$\theta_i$$. We then sample uniformly from $$[0,1]$$ and return the value of the region in which our sample falls.
 {% include maincolumn_img.html src="assets/img/multinomial-sampling.png" caption="Reducing sampling from a multinomial distribution to sampling a uniform distribution in [0,1]." %}
 
-### Sampling from directed graphical models
+### Forward Sampling
 
 {% include marginfigure.html id="grade" url="assets/img/grade-model.png" description="Bayes net model describing the performance of a student on an exam. The distribution can be represented a product of conditional probability distributions specified by tables." %}
 
@@ -28,6 +28,9 @@ Our technique for sampling from multinomials naturally extends to Bayesian netwo
 In our earlier model of a student's grade, we would first sample an exam difficulty $$d'$$ and an intelligence level $$i'$$. Then, once we have samples $$d'$$ and $$i'$$, we generate a student grade $$g'$$ from $$p(g \mid d', i')$$. At each step, we simply perform standard multinomial sampling.
 
 A former CS228 student has created an [interactive web simulation](http://pgmlearning.herokuapp.com/samplingApp) for visualizing Bayesian network forward sampling methods. Feel free to play around with it and, if you do, please submit any feedback or bugs through the Feedback button on the web app.
+
+
+"Forward sampling" can also be performed efficiently on undirected models if the model can be represented by a clique tree with a small number of variables per node. Calibrate the clique tree, which gives us the marginal distribution over each node, and choose a node to be the root. Then, marginalize over variables in the root node to get the marginal for a single variable. Once the marginal for a single variable $$x_1 ∼ p(X_1 \mid E=e)$$ has been sampled from the root node, the newly sampled value $$X_1 = x_1$$ can be incorporated as evidence. Finish sampling other variables from the same node, each time incorporating the newly sampled nodes as evidence, i.e. $$x_2 ∼ p(X_2=x_2 \mid X_1=x_1,E=e)$$ and $$x_3 ∼ p(X_3=x_3 \mid X_1=x_1,X_2=x_2,E=e)$$ and so on. When moving down the tree to sample variables from other nodes, each node must send an updated message containing the values of the sampled variables.
 
 ## Monte Carlo estimation
 
@@ -61,13 +64,13 @@ For example, suppose we have a Bayesian network over the set of variables $$X = 
 
 $$ p(E=e) = \sum_z p(Z=z, E=e) = \sum_x p(x) \Ind(E=e) = \E_{x \sim p}[\Ind(E=e)] $$
 
-and then take the Monte Carlo approximation. This will amount to sampling many samples from $$p$$ and keeping ones that are consistent with the value of the marginal.
+and then take the Monte Carlo approximation. In other words, we draw many samples from $$p$$ and report the fraction of samples that are consistent with the value of the marginal.
 
 ### Importance sampling
 
 Unfortunately, rejection sampling can be very wasteful. If $$p(E=e)$$ equals, say, 1%, then we will discard 99% of all samples.
 
-A better way of computing such integrals is via an approach called *importance sampling*. The main idea is to sample from a distribution $$q$$ (hopefully roughly proportional to $$f \cdot p$$), and then *reweigh* the samples in a principled way, so that their sum still approximates the desired integral.
+A better way of computing such integrals uses *importance sampling*. The main idea is to sample from a distribution $$q$$ (hopefully with $$q(x)$$ roughly proportional to $$f(x) \cdot p(x)$$), and then *reweigh* the samples in a principled way, so that their sum still approximates the desired integral.
 
 More formally, suppose we are interested in computing $$\E_{x \sim p}[f(x)]$$. We may rewrite this integral as
 
@@ -89,9 +92,9 @@ $$
 \text{Var}_{x \sim q}[ f(x)w(x) ] = \E_{x \sim q} [f^2(x) w^2(x)] - \E_{x \sim q} [f(x) w(x)]^2 \geq 0 .
 $$
 
-Note that we can set the variance to zero by choosing $$q(x) = \frac{\lvert f(x) \rvert p(x)}{\int \lvert f(x) \rvert p(x) dx}$$; this means that if we can sample from this $$q$$ (and evaluate the corresponding weight), all the Monte Carlo samples will be equal and correspond to the true value of our integral. Of course, sampling from such a $$q$$ would be NP-hard in general, but this at least gives us an indication for what to strive for.
+Note that we can set the variance to zero by choosing $$q(x) = \frac{\lvert f(x) \rvert p(x)}{\int \lvert f(x) \rvert p(x) dx}$$. If we can sample from this $$q$$ (and evaluate the corresponding weight), then we only need a single Monte Carlo sample to compute the true value of our integral. Of course, sampling from such a $$q$$ is NP-hard in general (its denominator $$\E_{x \sim p}[\lvert f(x) \vert]$$ is basically the quantity we're trying to estimate in the first place), but this at least gives us an indication for what to strive for.
 
-In the context of our previous example for computing $$p(E=e) = \E_{z \sim p}[p(e \mid z)]$$, we may take $$q$$ to be the uniform distribution and apply importance sampling as follows:
+In the context of our previous example for computing $$p(E=e)$$, we may take $$q$$ to be the uniform distribution and apply importance sampling as follows:
 
 $$
 \begin{align*}
@@ -143,12 +146,12 @@ Unfortunately, there is one drawback to the normalized importance sampling estim
 $$
     \E_{z \sim q} [\hat{P}(X_i=x_i \mid E=e)]
     = \E_{z \sim q} [\delta(z)]
-    \neq P(X_i=x_i, E=e)
+    \neq P(X_i=x_i \mid E=e)
 $$
 
 Fortunately, because the numerator and denominator are both unbiased, the normalized importance sampling estimator remains *asymptotically unbiased*, meaning that
 
-$$ \lim_{T \to \infty} \hat{P}(X_i=x_i \mid E=e) = P(X_i=x_i, E=e). $$
+$$ \lim_{T \to \infty} \E_{z \sim q} [\hat{P}(X_i=x_i \mid E=e)] = P(X_i=x_i \mid E=e). $$
 
 
 ## Markov chain Monte Carlo
@@ -170,9 +173,9 @@ If the initial state $$S_0$$ is drawn from a vector probabilities $$p_0$$, we ma
 
 $$ p_t = T^t p_0, $$
 
-where $$T^t$$ denotes matrix exponentiation (we apply the matrix operator $$t$$ times).
+where $$T^t$$ denotes matrix exponentiation (apply the matrix operator $$t$$ times).
 
-The limit $$\pi = \lim_{t \to \infty} p_t$$ (when it exists) is called a *stationary distribution* of the Markov chain. We will construct below Markov chain with a stationary distribution $$\pi$$ that exists and is the same for all $$p_0$$; we will refer to such $$\pi$$ as *the* stationary distribution* of the chain.
+The limit $$\pi = \lim_{t \to \infty} p_t$$ (when it exists) is called a *stationary distribution* of the Markov chain. We will construct below Markov chain with a stationary distribution $$\pi$$ that exists and is the same for all $$p_0$$; we will refer to such $$\pi$$ as *the* stationary distribution of the chain.
 
 A sufficient condition for a stationary distribution is called *detailed balance*:
 
@@ -215,7 +218,7 @@ As we said, the idea of MCMC algorithms is to construct a Markov chain over the 
 At a high level, MCMC algorithms will have the following structure. They take as argument a transition operator $$T$$ specifying a Markov chain whose stationary distribution is $$p$$, and an initial assignment $$x_0$$ to the variables of $$p$$. An MCMC algorithm then perform the following steps.
 
 1. Run the Markov chain from $$x_0$$ for $$B$$ *burn-in* steps.
-2. Run the Markov chain from $$x_0$$ for $$N$$ *sampling* steps and collect all the states that it visits.
+2. Run the Markov chain for $$N$$ *sampling* steps and collect all the states that it visits.
 
 Assuming $$B$$ is sufficiently large, the latter collection of states will form samples from $$p$$. We may then use these samples for Monte Carlo integration (or in importance sampling). We may also use them to produce Monte Carlo estimates of marginal probabilities. Finally, we may take the sample with the highest probability and use it as an estimate of the mode (i.e. perform MAP inference).
 
