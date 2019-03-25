@@ -1,14 +1,18 @@
-# cs228-notes
+# ECE 493 T25 Notes
 
-These notes form a concise introductory course on probabilistic graphical models. They are based on Stanford [CS228](https://cs228.stanford.edu/), taught by [Stefano Ermon](http://cs.stanford.edu/~ermon/), and have been written by [Volodymyr Kuleshov](http://www.stanford.edu/~kuleshov), with the [help](https://github.com/ermongroup/cs228-notes/commits/master) of many students and course staff.
+These notes form an introductory course on [Probabilistic Reasoning and Reinforcement Learning](https://uwaterloo.ca/scholar/mcrowley/classes/probabilistic-reasoning-and-reinforcement-learning) taught by [Mark Crowley](https://uwaterloo.ca/scholar/mcrowley). 
+Sources for the notes vary by each topic:
+- the notes on probabilistic programming comes from TBD
+- the graphical models portion, and the other jekyll structure and design, is based on the notes for Stanford [CS228](https://cs228.stanford.edu/), taught by [Stefano Ermon](http://cs.stanford.edu/~ermon/), and have been written by [Volodymyr Kuleshov](http://www.stanford.edu/~kuleshov), with the [help](https://github.com/ermongroup/cs228-notes/commits/master) of many students and course staff.
+- the notes for Reinforcement Learning comes from TBD
 
-This course starts by introducing graphical models from the very basics and concludes by explaining from first principles the [variational auto-encoder](https://ermongroup.github.io/cs228-notes/extras/vae).
 
-The compiled version is available [here](https://ermongroup.github.io/cs228-notes/).
+<!-- The compiled version is available [here](https://ermongroup.github.io/cs228-notes/). -->
 
+<!--
 ## Contributing
 
-This material is under construction! Although we have written up most of it, you will probably find several typos. If you do, please let us know, or submit a pull request with your fixes via GitHub.
+*This material is under construction!* Although we have written up most of it, you will probably find several typos. If you do, please let us know, or submit a pull request with your fixes via GitHub.
 
 The notes are written in Markdown and are compiled into HTML using Jekyll. Please add your changes directly to the Markdown source code. This repo is configured without any extra Jekyll plugins so it can be compiled directly by GitHub Pages. Thus, any changes to the Markdown files will be automatically reflected in the live website.
 
@@ -19,8 +23,9 @@ If you want to test your changes locally before pushing your changes to the `mas
 2) `rm -r _site/`  # remove the existing compiled site
 3) `jekyll serve`  # this creates a running server
 4) Open your web browser to where the server is running and check the changes you made.
+-->
 
-### Notes about writing math equations
+## Notes about writing math equations
 
 - Start and end math equations with `$$` **for both inline and display equations**! To make a display equation, put one newline before the starting `$$` a newline after the ending `$$`.
 
