@@ -50,7 +50,7 @@ More practical applications of these methods are used regularly in areas such as
 
 2. [Belief propagation](inference/jt/): The junction tree algorithm. Exact inference in arbitrary graphs. Loopy Belief Propagation.
 
-3. [MAP inference](inference/map/): Max-sum message passing. Graphcuts. Linear programming relaxations. Dual decomposition. TODO: shorten this, no need to go into so much detail
+3. (optional) [MAP inference](inference/map/): Max-sum message passing. Graphcuts. Linear programming relaxations. Dual decomposition. <!-- TODO TODO: shorten this, no need to go into so much detail -->
 
 4. [Sampling-based inference](inference/sampling/): Monte-Carlo sampling. Forward Sampling. Rejection Sampling. Importance sampling. Markov Chain Monte-Carlo. Applications in inference.
 
@@ -69,12 +69,13 @@ More practical applications of these methods are used regularly in areas such as
 <!-- 5. [Structure learning](learning/structure/): Chow-Liu algorithm. Akaike information criterion. Bayesian information criterion. Bayesian structure learning (*under construction*).-->
 
 ## Towards Decision Making
-1. [Causation vs Correlation](causality/): how to model probabilistic causal relationships, relation to decision making 
+1. [Causation vs Correlation](causality/): how to model probabilistic causal relationships, relation to decision making  <!-- TODO make causation part short --> 
+
 1. Bayesian Optimization (Upper Confidence Bounds, Multi-armed bandits, Thompson Sampling) 
 
 ## Decision Making Under Uncertainty
-1. Markov Decision Processes (MDPs)
 1. Influence Diagrams
+1. Markov Decision Processes (MDPs) <!-- TODO  where does MDP come, before or after IDs and MABs, after? --> 
 1. Multi-armed bandits (MAB)
 1. Monte-Carlo Tree Search
 
