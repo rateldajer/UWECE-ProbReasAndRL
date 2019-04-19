@@ -8,6 +8,7 @@ A graphical model has two components: the graph structure, and the parameters of
 
 - *Parameter learning*, where the graph structure is known and we want to estimate the factors.
 - *Structure learning*, where we want to estimate the graph, i.e. determine from data how the variables depend on each other.
+<!-- TODO drop structure entirely, just mention it --> 
 
 We are going to first focus on parameter learning, and come back to structure learning in a later chapter.
 
