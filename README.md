@@ -30,3 +30,7 @@ If you want to test your changes locally before pushing your changes to the `mas
 - Start and end math equations with `$$` **for both inline and display equations**! To make a display equation, put one newline before the starting `$$` a newline after the ending `$$`.
 
 - Avoid vertical bars `|` in any inline math equations (ie. within a paragraph of text). Otherwise, the GitHub Markdown compiler interprets it as a table cell element (see GitHub Markdown spec [here](https://github.github.com/gfm/)). Instead, use one of `\mid`, `\vert`, `\lvert`, or `\rvert` instead. For double bar lines, write `\|` instead of `||`.
+
+<!-- TODO Meta - can you use bibtex references and file to fill the footnotes? other citation methodk? --> 
+<!-- TODO Meta - create a references page using bibtex export to html and link to it, then references in the web notes can just use the codes --> 
+<!-- TODO remove footer notes which link to prev and next note when it's not known yet --> 

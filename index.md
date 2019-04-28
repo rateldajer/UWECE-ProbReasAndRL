@@ -5,8 +5,7 @@ title: Contents
 <span class="newthought">These notes</span> provide a resource for an introductory course on probabilistic reasoning and decision making{% include sidenote.html id="note-test" note="test side note" %}.
 They are gathered from a variety of sources including
 - Stanford [CS228](https://cs228.stanford.edu/) which were originally written by [Volodymyr Kuleshov](http://www.stanford.edu/~kuleshov) and [Stefano Ermon](http://cs.stanford.edu/~ermon/), with the [help](https://github.com/ermongroup/cs228-notes/commits/master) of many students and course staff.
-- others texts.... TODO
-
+- You can find other relevant resources for the course which we will often use on the [Resources Page](resources).
 
 <!-- TODO : update this note -->
 {% include marginnote.html id='mn-construction' note='The notes are still **under construction**! Although we have written up a lot of the material, you will probably find several and errors. If you do, please let us know (or submit a pull request with your fixes).'%}
@@ -55,6 +54,7 @@ More practical applications of these methods are used regularly in areas such as
 4. [Sampling-based inference](inference/sampling/): Monte-Carlo sampling. Forward Sampling. Rejection Sampling. Importance sampling. Markov Chain Monte-Carlo. Applications in inference.
 
 <!--5. [Variational inference](inference/variational/): Variational lower bounds. Mean Field. Marginal polytope and its relaxations.-->
+<!-- TODO  Make a main notes file with all notes, from current course or others for students to peruse --> 
 
 ## Learning
 
@@ -64,25 +64,24 @@ More practical applications of these methods are used regularly in areas such as
 
 <!-- 3. [Learning in latent variable models](learning/latent/): Latent variable models. Gaussian mixture models. Expectation maximization.-->
 
-4. [Bayesian learning](learning/bayesian/): Bayesian paradigm. Conjugate priors. Examples (*under construction*). The basics, enough to get MABs. <!-- TODO update this description, how is this different from Bayesian Optimziation? --> 
+4. [Bayesian learning](learning/bayesian/): Bayesian paradigm. Conjugate priors. Examples (*under construction*). The basics, enough to understand Multi-Armed Bandits (MABs). <!-- TODO update this description, how is this different from Bayesian Optimziation? --> 
 
 <!-- 5. [Structure learning](learning/structure/): Chow-Liu algorithm. Akaike information criterion. Bayesian information criterion. Bayesian structure learning (*under construction*).-->
 
-## Towards Decision Making
-1. [Causation vs Correlation](causality/): how to model probabilistic causal relationships, relation to decision making  <!-- TODO make causation part short --> 
-
-1. Bayesian Optimization (Upper Confidence Bounds, Multi-armed bandits, Thompson Sampling) 
-
 ## Decision Making Under Uncertainty
-1. Influence Diagrams
-1. Markov Decision Processes (MDPs) <!-- TODO  where does MDP come, before or after IDs and MABs, after? --> 
-1. Multi-armed bandits (MAB)
-1. Monte-Carlo Tree Search
+1. [Causation vs Correlation](causality/): how to model probabilistic causal relationships, relation to decision making  <!-- TODO make causation part short --> 
+1. [Influence Diagrams](decision/InfluenceDiagrams) (a simple way to add decisions to PGMs) <!-- TODO brief influence diagram notes --> 
+1. Bayesian Optimization (Upper Confidence Bounds, Multi-armed bandits, Thompson Sampling) <!-- TODO write UCB, MAB notes, use the bayes hackers book --> 
+1. [Markov Decision Processes (MDPs)](decision/MarkovDecisionProccesses) <!-- TODO MDP notes --> 
+<!-- TODO  where does MDP come, before or after IDs and MABs, after? --> 
+1. [Multi-armed bandits (MAB)](decision/MultiArmedBandits) <!-- TODO MAB notes --> 
+1. [Monte-Carlo Tree Search](decision/MCTS) (a way of solving MABs, also useful later for the latest Deep RL solutions) <!-- TODO MCTS notes --> 
 
 ## Deep Reinforcement Learning
 1. Basics of Neural Networks (training, back-propagation, gradient descent, regularization methods)
 1. Deep Learning (training methods, relevant architectures for Reinforcement Learning, fully connected feed forward networks)
-1. Reinforcement Learning (RL) (theory, Bellman equations, Value/Policy Iteration, TD methods, Q-learning, SARSA, policy gradients, actor-critic methods)
+1. [Reinforcement Learning (RL)](reinforcementlearning/introduction) (theory, Bellman equations, Value/Policy Iteration)
+1. RL Solution Methods: [TD methods](reinforcementlearning/tdlearning), [Q-learning](reinforcementlearning/qlearning), SARSA, policy gradients, [Actor-Critic methods](reinforcementlearning/actorcritic)
 1. Function approximation for RL (classic methods, Deep Learning)
 1. Deep RL : Deep Q- Networks (DQN), A3C, A2C, …
 
@@ -107,3 +106,10 @@ More practical applications of these methods are used regularly in areas such as
 1. Reinforcement Learning (RL) (theory, Bellman equations, Value/Policy Iteration, TD methods, Q-learning, SARSA, policy gradients, actor-critic methods)
 1. Function approximation for RL (classic methods, Deep Learning)
 1. Deep RL : Deep Q- Networks (DQN), A3C, A2C, …
+
+
+# Test Area
+Check out these templates:
+- [template](template.md) from original course
+- my template
+

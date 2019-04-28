@@ -2,7 +2,8 @@
 layout: post
 title: Learning in directed models
 ---
-We now turn our attention to the third and last part of the course: *learning*. Given a dataset, we would like to fit a model that will make useful predictions on various tasks that we care about.
+<!-- TODO  should I skip PGM leanring altogether? --> 
+We now turn our attention to the task of *learning* some of the parameters of a model. Given a dataset, we would like to fit a model that will make useful predictions on various tasks that we care about.
 
 A graphical model has two components: the graph structure, and the parameters of the factors induced by this graph. These components lead to two different learning tasks:
 
