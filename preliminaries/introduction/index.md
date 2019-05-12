@@ -61,13 +61,13 @@ This representation has the immediate advantage of being easy to understand. It 
 
 More importantly, we want to submit various queries to the model (e.g. what is the probability of spam given that I see the word "pill"?); answering these questions will require specialized algorithms that will be most naturally defined using graph-theoretical concepts. We will also use graph theory to analyze the speed of learning algorithms and to quantify the computational complexity (e.g. NP-hardness) of different learning tasks.
 
-The take-away point we want to get across is that there is an intimate connection between probability distributions and graphs that will be exploited throughout the course for defining, learning, and working with probabilistic models.
+The take-away point we want to get across in the first part of the course is that there is an intimate connection between probability distributions and graphs that can be exploited for defining, learning, and working with probabilistic models.
 
-## A bird's eye overview of the course
+## A bird's eye overview of the first part of the course
 
 Our discussion of graphical models will be divided into three major parts: representation (how to specify a model), inference (how to ask the model questions), and learning (how to fit a model to real-world data).
 These three themes will also be closely linked: to derive efficient inference and learning algorithms, the model will need to be adequately represented; furthermore, learning models will require inference as a subroutine.
-Thus, it will be best to always keep the three tasks in mind, rather than focusing on them in isolation{% include sidenote.html id="note_parikh" note="For a more detailed overview, see this [writeup](https://docs.google.com/file/d/0B_hicYJxvbiOc1ViZTRxbnhSU1cza1VhOFlhRlRuQQ/edit) by Neal Parikh; this part of the notes is based on it." %}.
+Thus, it will be best to always keep the three tasks in mind, rather than focusing on them in isolation.
 
 ### Representation
 
@@ -105,7 +105,8 @@ However, we will see that learning and inference are also inherently linked in a
 <!-- Also, the topic of learning will feature important connections to the field of computational learning theory - which deals with questions such as generalization from limited data and overfitting - as well as to Bayesian statistics - which tells us (among other things) about how to combine prior knowledge and observed evidence in a principled way.  -->
 
 
-### Decision Making
+## Decision Making Under Uncertainty
+*to come*
 <!-- TODO fill in decision making notes in intro --> 
 
 

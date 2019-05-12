@@ -3,7 +3,7 @@ layout: post
 title: Decision Making
 ---
 
-Now we start the second part of the course which focusses on making *decisions* given complete or partial and uncertain knowledge about the world.
+Now we start the second part of the course which focusses on making *decisions* given complete or partial and uncertain knowledge about the world. 
 
 <!-- todo  use the dmuu and rl book chapter 3 as a basis --> 
 

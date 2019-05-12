@@ -2,7 +2,7 @@
 layout: post
 title: Probability Review
 ---
-We will go through a review of probability concepts over here, all of the review materials have been adapted from [CS229 Probability Notes](http://cs229.stanford.edu/section/cs229-prob.pdf).
+We will go through a review of probability concepts over here, the review materials have been adapted from Stanford [CS228](https://cs228.stanford.edu/).
 
 # 1. Elements of probability
 In order to define a probability on a set we need a few basic elements,
