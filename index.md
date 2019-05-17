@@ -47,13 +47,14 @@ More practical applications of these methods are used regularly in areas such as
 
 1. [Variable elimination](inference/ve/) The inference problem. Variable elimination. Complexity of inference.
 
-2. [Belief propagation](inference/jt/): The junction tree algorithm. Exact inference in arbitrary graphs. Loopy Belief Propagation.
+2. (optional) [Belief propagation](inference/jt/): The junction tree algorithm. Exact inference in arbitrary graphs. Loopy Belief Propagation.
 
 3. (optional) [MAP inference](inference/map/): Max-sum message passing. Graphcuts. Linear programming relaxations. Dual decomposition. <!-- TODO TODO: shorten this, no need to go into so much detail -->
 
 4. [Sampling-based inference](inference/sampling/): Monte-Carlo sampling. Forward Sampling. Rejection Sampling. Importance sampling. Markov Chain Monte-Carlo. Applications in inference.
 
-<!--5. [Variational inference](inference/variational/): Variational lower bounds. Mean Field. Marginal polytope and its relaxations.-->
+5. [Variational inference](inference/variational/): Variational lower bounds. Mean Field. Marginal polytope and its relaxations. <!-- TODO : Question : could I just cover this at a high level to show them how to use it? -->
+
 <!-- TODO  Make a main notes file with all notes, from current course or others for students to peruse --> 
 
 ## Learning
