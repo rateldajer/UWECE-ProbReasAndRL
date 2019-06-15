@@ -6,15 +6,21 @@ $$\newcommand{iid}{\overset{\text{i.i.d.}}{\sim}}$$
 
 In practice, the probabilistic models that we use are often quite complex, and simple algorithms like variable elimination may be too slow for them. In fact, many interesting classes of models may not admit exact polynomial-time solutions at all, and for this reason, much research effort in machine learning is spent on developing algorithms that yield *approximate* solutions to the inference problem. This section begins our study of such algorithms.
 
-There exist two main families of approximate algorithms: *variational* methods{% include sidenote.html id="note-variational" note="Variational inference methods take their name from the *calculus of variations*, which deals with optimizing functions that take other functions as arguments." %}, which formulate inference as an optimization problem, as well as *sampling* methods, which produce answers by repeatedly generating random numbers from a distribution of interest.
+There exist **two main families of approximate algorithms**: 
+- *sampling* methods: 
+    - these produce answers by repeatedly generating random numbers from a distribution of interest
+- *variational* methods: 
+    - these methods take their name from the *calculus of variations*, which deals with optimizing functions that take other functions as arguments
+    - these formulate inference as an optimization problem
 
-Sampling methods can be used to perform both marginal and MAP inference queries; in addition, they can compute various interesting quantities, such as expectations $$\E[f(X)]$$ of random variables distributed according to a given probabilistic model. Sampling methods have historically been the main way of performing approximate inference, although over the past 15 years variational methods have emerged as viable (and often superior) alternatives.
+Sampling methods can be used to perform both **marginal and MAP inference queries**. They can also be used to **compute expectations $$\E[f(X)]$$ of random variables** distributed according to a given probabilistic model and other interetesting quantities. {% include sidenote.html id="sdid" note="Sampling methods have historically been the main way of performing approximate inference, although over the past 15 years variational methods have emerged as viable (and often superior) alternatives."
+ %}
 
 ## Sampling from a probability distribution
 
 As a warm-up, let's think for a minute how we might sample from a multinomial distribution with $$k$$ possible outcomes and associated probabilities $$\theta_1, \dotsc, \theta_k$$.
 
-Sampling, in general, is not an easy problem. Our computers can only generate samples from very simple distributions{% include sidenote.html id="note-pseudorandom" note="Even those samples are not truly random. They are actually taken from a deterministic sequence whose statistical properties (e.g. running averages) are indistinguishable from a truly random one. We call such sequences *pseudorandom*." %}, such as the uniform distribution over $$[0,1]$$. All sampling techniques involve calling some kind of simple subroutine multiple times in a clever way.
+Sampling, in general, is not an easy problem. Computers **can only generate samples from very simple distributions**{% include sidenote.html id="note-pseudorandom" note="Even those samples are not truly random. They are actually taken from a deterministic sequence whose statistical properties (e.g. running averages) are indistinguishable from a truly random one. We call such sequences **pseudorandom**." %}, **such as the uniform distribution over $$[0,1]$$**. All sampling techniques involve *calling some kind of simple subroutine multiple times in a clever way*.
 
 In our case, we may reduce sampling from a multinomial variable to sampling a single uniform variable by subdividing a unit interval into $$k$$ regions with region $$i$$ having size $$\theta_i$$. We then sample uniformly from $$[0,1]$$ and return the value of the region in which our sample falls.
 {% include maincolumn_img.html src="assets/img/multinomial-sampling.png" caption="Reducing sampling from a multinomial distribution to sampling a uniform distribution in [0,1]." %}
@@ -23,14 +29,20 @@ In our case, we may reduce sampling from a multinomial variable to sampling a si
 
 {% include marginfigure.html id="grade" url="assets/img/grade-model.png" description="Bayes net model describing the performance of a student on an exam. The distribution can be represented a product of conditional probability distributions specified by tables." %}
 
-Our technique for sampling from multinomials naturally extends to Bayesian networks with multinomial variables, via a method called *ancestral* (or *forward*) sampling. Given a probability $$p(x_1, \dotsc, x_n)$$ specified by a Bayes net, we sample variables in topological order. We start by sampling the variables with no parents; then we sample from the next generation by conditioning these variables' CPDs to values sampled at the first step. We proceed like this until all $$n$$ variables have been sampled. Importantly, in a Bayesian network over $$n$$ variables, forward sampling allows us to sample from the joint distribution $$\bfx \sim p(\bfx)$$ in linear $$O(n)$$ time by taking exactly 1 multinomial sample from each CPD.
+Our technique for sampling from multinomials naturally extends to Bayesian networks with multinomial variables, via a method called **ancestral (or forward) sampling**. Given a probability $$p(x_1, \dotsc, x_n)$$ specified by a Bayes net, we sample variables in topological order. 
+1. We start by sampling the variables with no parents
+2. Then we sample from the next generation by conditioning these variables' CPDs to values sampled at the first step. 
+3. Proceed in this way until all $$n$$ variables have been sampled. 
+
+Importantly, in a Bayesian network over $$n$$ variables, forward sampling allows us to sample from the joint distribution $$\bfx \sim p(\bfx)$$ in **linear $$O(n)$$ time** by taking exactly 1 multinomial sample from each CPD. This sample gives us one *realization* of the Bayesian network.
 
 In our earlier model of a student's grade, we would first sample an exam difficulty $$d'$$ and an intelligence level $$i'$$. Then, once we have samples $$d'$$ and $$i'$$, we generate a student grade $$g'$$ from $$p(g \mid d', i')$$. At each step, we simply perform standard multinomial sampling.
+{% include sidenote.html id="sdid" note="A former Stanford CS228 student has created an [interactive web simulation](http://pgmlearning.herokuapp.com/samplingApp) for visualizing Bayesian network forward sampling methods. Feel free to play around with it and, if you do, please submit any feedback or bugs through the Feedback button on the web app. " %}
 
-A former CS228 student has created an [interactive web simulation](http://pgmlearning.herokuapp.com/samplingApp) for visualizing Bayesian network forward sampling methods. Feel free to play around with it and, if you do, please submit any feedback or bugs through the Feedback button on the web app.
-
-
+<!--
+### Forward Sampling on Undirected Models
 "Forward sampling" can also be performed efficiently on undirected models if the model can be represented by a clique tree with a small number of variables per node. Calibrate the clique tree, which gives us the marginal distribution over each node, and choose a node to be the root. Then, marginalize over variables in the root node to get the marginal for a single variable. Once the marginal for a single variable $$x_1 ∼ p(X_1 \mid E=e)$$ has been sampled from the root node, the newly sampled value $$X_1 = x_1$$ can be incorporated as evidence. Finish sampling other variables from the same node, each time incorporating the newly sampled nodes as evidence, i.e. $$x_2 ∼ p(X_2=x_2 \mid X_1=x_1,E=e)$$ and $$x_3 ∼ p(X_3=x_3 \mid X_1=x_1,X_2=x_2,E=e)$$ and so on. When moving down the tree to sample variables from other nodes, each node must send an updated message containing the values of the sampled variables.
+-->
 
 ## Monte Carlo estimation
 
@@ -92,7 +104,15 @@ $$
 \text{Var}_{x \sim q}[ f(x)w(x) ] = \E_{x \sim q} [f^2(x) w^2(x)] - \E_{x \sim q} [f(x) w(x)]^2 \geq 0 .
 $$
 
-Note that we can set the variance to zero by choosing $$q(x) = \frac{\lvert f(x) \rvert p(x)}{\int \lvert f(x) \rvert p(x) dx}$$. If we can sample from this $$q$$ (and evaluate the corresponding weight), then we only need a single Monte Carlo sample to compute the true value of our integral. Of course, sampling from such a $$q$$ is NP-hard in general (its denominator $$\E_{x \sim p}[\lvert f(x) \vert]$$ is basically the quantity we're trying to estimate in the first place), but this at least gives us an indication for what to strive for.
+Note that we can set the variance to zero by choosing: 
+
+$$
+q(x) = \frac{\lvert f(x) \rvert p(x)}{\int \lvert f(x) \rvert p(x) dx}
+$$ 
+
+*If we could sample* from this $$q$$ (and evaluate the corresponding weight), then we only need a single Monte Carlo sample to compute the true value of our integral. 
+
+Unfortunately, sampling from such this $$q$$ is **NP-hard in general**. Not that its denominator $$\E_{x \sim p}[\lvert f(x) \vert]$$ is basically the quantity we're trying to estimate in the first place. However, this at least gives us an indication for what to strive for.
 
 In the context of our previous example for computing $$p(E=e)$$, we may take $$q$$ to be the uniform distribution and apply importance sampling as follows:
 
@@ -107,7 +127,11 @@ p(E=e)
 \end{align*}
 $$
 
-where $$w_e(z) = p(e, z)/q(z)$$. Unlike rejection sampling, this will use all the examples; if $$p(z \mid e)$$ is not too far from uniform, this will converge to the true probability after only a very small number of samples.
+where $$w_e(z) = p(e, z)/q(z)$$. 
+
+Benefits of this approach: 
+- Unlike rejection sampling, **this will use all the examples**
+- If $$p(z \mid e)$$ is not too far from uniform, this will converge to the true probability after only a very small number of samples.
 
 ### Normalized importance sampling
 
@@ -115,6 +139,7 @@ Unfortunately, unnormalized importance sampling is not suitable for estimating c
 
 $$ P(X_i=x_i \mid E=e) = \frac{P(X_i=x_i, E=e)}{P(E=e)}. $$
 
+<!--
 Note that using unnormalized importance sampling, we could estimate the numerator as
 
 $$
@@ -132,8 +157,9 @@ where $$\delta(z) = \begin{cases}1 & \text{if $z$ is consistent with $X_i = x_i$
 $$ P(E=e) \approx \frac{1}{T} \sum_{t=1}^T w_e(z^t). $$
 
 If we estimate the numerator $$P(X_i=x_i, E=e)$$ and the denominator $$P(E=e)$$ with different and independent samples of $$z^t \sim q$$, then the errors in the two approximations may compound. For example, if the numerator is an under-estimate and the denominator is an over-estimate, the final probability could be a severe under-estimate.
+-->
 
-However, if we use the same set of $$T$$ samples $$z^1, \dotsc, z^T \sim q$$ for both the numerator and denominator, we avoid this issue of compounding errors. Thus, the final form of normalized importance sampling is
+If we use the same set of $$T$$ samples $$z^1, \dotsc, z^T \sim q$$ for both the numerator and denominator, we avoid an issue of compounding errors. Thus, the final form of normalized importance sampling is
 
 $$
 \hat{P}(X_i=x_i \mid E=e)
@@ -141,6 +167,7 @@ $$
        {\frac{1}{T} \sum_{t=1}^T w_e(z^t)}
 $$
 
+<!--
 Unfortunately, there is one drawback to the normalized importance sampling estimator, which is that it is *biased*. If $$T = 1$$, then we have
 
 $$
@@ -148,8 +175,9 @@ $$
     = \E_{z \sim q} [\delta(z)]
     \neq P(X_i=x_i \mid E=e)
 $$
+-->
 
-Fortunately, because the numerator and denominator are both unbiased, the normalized importance sampling estimator remains *asymptotically unbiased*, meaning that
+Since the numerator and denominator are both unbiased, the normalized importance sampling estimator remains *asymptotically unbiased*, meaning that
 
 $$ \lim_{T \to \infty} \E_{z \sim q} [\hat{P}(X_i=x_i \mid E=e)] = P(X_i=x_i \mid E=e). $$
 
@@ -160,9 +188,9 @@ Let us now turn our attention from computing expectations to performing marginal
 
 ### Markov Chain
 
-A key concept in MCMC is that of a *Markov chain*. A (discrete-time) Markov chain is a sequence of random variables $$S_0, S_1, S_2, \ldots$$ with each random variable $$S_i \in \{1,2,\ldots,d\}$$ taking one of $$d$$ possible values, intuitively representing the state of a system. The initial state is distributed according to a probability $$P(S_0)$$; all subsequent states are generated from a conditional probability distribution that depends only on the previous random state, i.e. $$S_i$$ is distributed according to $$P(S_i \mid S_{i-1})$$.
+A key concept in MCMC is that of a *Markov chain*. A (discrete-time) Markov chain is a sequence of random variables $$S_0, S_1, S_2, \ldots$$ with each random variable $$S_i \in \{1,2,\ldots,d\}$$ taking one of $$d$$ possible values, intuitively representing the state of a system. The initial state is distributed according to a probability $$P(S_0)$$; all subsequent states are generated from a **conditional probability distribution that depends only on the previous random state**, i.e. $$S_i$$ is distributed according to $$P(S_i \mid S_{i-1})$$.
 
-The probability $$P(S_i \mid S_{i-1})$$ is the same at every step $$i$$; this means that the transition probabilities at any time in the entire process depend only on the given state and not on the history of how we got there. This is called the *Markov* assumption.
+The probability $$P(S_i \mid S_{i-1})$$ is the same at every step $$i$$; this means that the transition probabilities at any time in the entire process depend only on the given state and not on the history of how we got there. This is called the **Markov assumption**.
 
 {% include marginfigure.html id="mc" url="assets/img/markovchain.png" description="A Markov chain over three states. The weighted directed edges indicate probabilities of transitioning to a different state." %}
 It is very convenient to represent the transition probability as a $$d \times d$$ matrix
@@ -177,22 +205,22 @@ where $$T^t$$ denotes matrix exponentiation (apply the matrix operator $$t$$ tim
 
 The limit $$\pi = \lim_{t \to \infty} p_t$$ (when it exists) is called a *stationary distribution* of the Markov chain. We will construct below Markov chain with a stationary distribution $$\pi$$ that exists and is the same for all $$p_0$$; we will refer to such $$\pi$$ as *the* stationary distribution of the chain.
 
+
+### Existence of a stationary distribution
 A sufficient condition for a stationary distribution is called *detailed balance*:
 
 $$ \pi(x') T(x \mid x') = \pi(x) T(x' \mid x) \quad\text{for all $x$} $$
 
 It is easy to show that such a $$\pi$$ must form a stationary distribution (just sum both sides of the equation over $$x$$ and simplify). However, the reverse may not hold and indeed it is possible to have [MCMC without satisfying detailed balance](https://arxiv.org/pdf/1007.2262.pdf).
 
-### Existence of a stationary distribution
-
 The high-level idea of MCMC will be to construct a Markov chain whose states will be joint assignments to the variables in the model and whose stationary distribution will equal the model probability $$p$$.
 
 In order to construct such a chain, we first need to understand when stationary distributions exist. This turns out to be true under two sufficient conditions:
 
-- *Irreducibility*: It is possible to get from any state $$x$$ to any other state $$x'$$ with probability > 0 in a finite number of steps.
-- *Aperiodicity*: It is possible to return to any state at any time, i.e. there exists an $$n$$ such that for all $$i$$ and all $$n' \geq n$$, $$P(s_{n'}=i \mid s_0 = i) > 0$$.
+- **Irreducibility**: It is possible to get from any state $$x$$ to any other state $$x'$$ with probability > 0 in a finite number of steps.
+- **Aperiodicity**: It is possible to return to any state at any time, i.e. there exists an $$n$$ such that for all $$i$$ and all $$n' \geq n$$, $$P(s_{n'}=i \mid s_0 = i) > 0$$.
 
-The first condition is meant to prevent *absorbing states*, i.e. states from which we can never leave. In the example below, if we start in states $$1,2$$, we will never reach state 4. Conversely, if we start in state 4, then we will never reach states 1,2. If we start the chain in the middle (in state 3), then clearly it cannot have a single limiting distribution.
+The first condition is meant to prevent **absorbing states**, i.e. states from which we can never leave. In the example below, if we start in states $$1,2$$, we will never reach state 4. Conversely, if we start in state 4, then we will never reach states 1,2. If we start the chain in the middle (in state 3), then clearly it cannot have a single limiting distribution.
 {% include maincolumn_img.html src='assets/img/reducible-chain.png' caption='A reducible Markov Chain over four states.' %}
 
 The second condition is necessary to rule out transition operators such as

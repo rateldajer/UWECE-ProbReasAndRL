@@ -7,15 +7,23 @@ The learning approaches we have discussed so far are based on the principle of m
 
 ## Example 1
 
-Let's suppose we are interested in modeling the outcome of a biased coin, $$X = \{heads, tails\}$$. We toss the coin 10 times, observing 6 heads. If $$\theta$$ denotes the probability of observing heads, the maximum likelihood estimate (MLE) is given by,
+<!--do I need to explain MLE?-->
 
-$$ \theta_{MLE} = \frac{num\_heads}{num\_heads + num\_tails} = 0.6 $$
+Let's suppose we are interested in modeling the outcome of a biased coin, $$X = \{heads, tails\}$$. We toss the coin 10 times, observing 6 heads. If $$\theta$$ denotes the probability of observing heads, the maximum likelihood estimate (MLE) is given by,
+$$
+\theta_{MLE} = \frac{num\_heads}{num\_heads + num\_tails} = 0.6
+$$
+
 
 Now, suppose we continue tossing the coin such that after a 100 total trials (including the 10 initial trials), we observe 60 heads. Again, we can compute the MLE as,
 
-$$ \theta_{MLE} = \frac{num\_heads}{num\_heads + num\_tails} = 0.6 $$
+$$
+\theta_{MLE} = \frac{num\_heads}{num\_heads + num\_tails} = 0.6
+$$
 
-In both the above situations, the maximum likelihood estimate does not change as we observe more data. This seems counterintuitive - our _confidence_ in predicting heads with probability 0.6 should be higher in the second setting where we have seen many more trials of the coin! The reason why MLE fails to distinguish the two settings is due to an implicit assumption we have been making all along. MLE assumes that the only source of uncertainty is due to the variables, $$X$$ and the quantification of this uncertainty is based on a fixed parameter $$\theta_{MLE}$$.
+In both the above situations, the maximum likelihood estimate does not change as we observe more data. This seems counterintuitive - our _confidence_ in predicting heads with probability 0.6 should be higher in the second setting where we have seen many more trials of the coin! The reason why MLE fails to distinguish the two settings is due to an implicit assumption it makes. MLE assumes that the only source of uncertainty is due to the variables, $$X$$ and the quantification of this uncertainty is based on a fixed parameter $$\theta_{MLE}$$.
+
+
 
 ## Example 2
 
@@ -30,13 +38,16 @@ Out-of-vocabulary words are a common phenomena even for language models trained 
 
 In contrast to maximum likelihood learning, Bayesian learning explicitly models uncertainty over both the variables, $$X$$ and the parameters, $$\theta$$. In other words, the model parameters $$\theta$$ are random variables as well.
 
-A _prior_ distribution over the parameters, $$p(\theta)$$ encodes our initial beliefs. These beliefs are subjective. For example, we can choose the prior over $$\theta$$ for a biased coin to be uniform between 0 and 1. If however we expect the coin to be fair, the prior distribution can be peaked around $$\theta = 0.5$$. We will discuss commonly used priors later in this chapter.
+A _prior_ distribution over the parameters, $$p(\theta)$$ encodes our initial beliefs. These beliefs are *subjective*. For example, we can choose the prior over $$\theta$$ for a biased coin to be uniform between 0 and 1. If however we expect the coin to be fair, the prior distribution can be peaked around $$\theta = 0.5$$. We will discuss commonly used priors later in this chapter.
+
+<!--see https://nbviewer.jupyter.org/github/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/blob/master/Chapter6_Priorities/Ch6_Priors_PyMC3.ipynb on subjective and objective priors-->
 
 Observing data $$D$$ in the form of evidence allows us to update our beliefs using Bayes' rule,
 
 $$
 p(\theta \mid D) = \frac{p(D \mid \theta) \, p(\theta)}{p(D)} \propto p(D \mid \theta) \, p(\theta)
 $$
+
 
 $$
 posterior \propto likelihood \times prior

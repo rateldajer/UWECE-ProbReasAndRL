@@ -2,7 +2,6 @@
 layout: post
 title: Learning in directed models
 ---
-<!-- TODO  should I skip PGM leanring altogether? --> 
 We now turn our attention to the task of *learning* some of the parameters of a model. Given a dataset, we would like to fit a model that will make useful predictions on various tasks that we care about.
 
 A graphical model has two components: the graph structure, and the parameters of the factors induced by this graph. These components lead to two different learning tasks:
@@ -11,9 +10,9 @@ A graphical model has two components: the graph structure, and the parameters of
 - *Structure learning*, where we want to estimate the graph, i.e. determine from data how the variables depend on each other.
 <!-- TODO drop structure entirely, just mention it --> 
 
-We are going to first focus on parameter learning, and come back to structure learning in a later chapter.
+In this course we will look only at parameter learning. For more on structure learning see [other sources online](https://ermongroup.github.io/cs228-notes/learning/structure/).
 
-We will consider parameter learning in both directed and undirected models. It turns out that the former will admit easy, closed form solutions, while the latter will involve potentially intractable numerical optimization techniques. In later sections, we will look at latent variable models (which contain unobserved hidden variables that succinctly model the event of interest) as well as Bayesian learning, a general approach to statistics that offers certain advantages to more standard approaches.
+We will consider parameter learning in directed models which can admit easy, closed form solutions. Undirected model learning often involves potentially intractable numerical optimization techniques. Later we will look at Bayesian learning, a general approach to statistics that offers certain advantages to more standard approaches.
 
 ## The learning task
 
@@ -73,61 +72,6 @@ $$
 for which the optimal solution is
 
 $$ \theta^* = \frac{\text{# heads}}{\text{# heads} + \text{# tails}}. $$
-
-## Likelihood, Loss and Risk
-
-We may now generalize this by introducing the concept of a *loss function*. A loss function $$L(x,p)$$ measures the loss that a model distribution $$p$$ makes on a particular instance $$x$$. Assuming instances are sampled from some distribution $$p^*$$, our goal is to
-find the model that minimizes the expected loss or risk,
-
-$$
-\E_{x \sim p^*} [ L(x,p) ] \approx \frac{1}{|D|} \sum_{x \in D} L(x,p),
-$$
-
-Notice that the loss function which corresponds to maximum likelihood estimation is the log loss $$-\log p(x)$$.
-
-Another example of a loss is the conditional log-likelihood. Suppose we want to predict a set of variables $$y$$ given $$x$$, e.g., for segmentation or stereo vision. We concentrate on predicting $$p(y \mid x)$$, and use a conditional loss function $$L(x,y,p) = −\log p(y \mid x)$$. Since the loss function only depends on $$p(y \mid x)$$, it suffices to estimate the conditional distribution, not the joint. This is the objective function we use to train conditional random fields (CRFs).
-
-Suppose next that our ultimate goal is structured prediction, i.e. given $$x$$ we predict $$y$$ via $$\arg\max_y p(y \mid x)$$. What loss function should we use to measure error in this setting?
-
-One reasonable choice would be the classification error:
-
-$$
-\E_{(x,y)\sim p^*} [\mathbb{I}\{ \exists y' \neq y : p(y'\mid x) \geq p(y\mid x) \}],
-$$
-
-which is the probability over all $$(x, y)$$ pairs sampled from $$p^*$$ that we predict the wrong assignment. A somewhat better choice might be the hamming loss, which counts the number of variables in which the MAP assignment differs from the ground truth label. There also exists a fascinating line of work on generalizations of the hinge loss to CRFs, which leads to a class of models called *structured support vector machines*.
-
-The moral of the story here is that it often makes sense to choose a loss that is appropriate to the task at hand, e.g. prediction rather than full density estimation.
-
-## Empirical Risk and Overfitting
-
-Empirical risk minimization can easily overfit the data. The data we have is a sample, and usually there is vast amount of samples that we have never seen. Our model should generalize well to these "never-seen" samples.
-
-### The bias/variance tradeoff
-
-Thus, we typically restrict the *hypothesis space* of distributions that we search over. If the hypothesis space is very limited, it might not be able to represent $$p^*$$, even with unlimited data. This type of limitation is called bias, as the learning is limited on how close it can approximate the target distribution
-
-If we select a highly expressive hypothesis class, we might represent better the data. However, when we have small amount of data, multiple models can fit well, or even better than the true model. Moreover, small perturbations on D will result in very different estimates. This limitation is call the variance.
-
-Thus, there is an inherent bias-variance trade off when selecting the hypothesis class. One of the main challenges of machine learning is to choose a model that is sufficiently rich to be useful, yet not so complex as to overfit the training set.
-
-### How to avoid overfitting?
-
-High bias can be avoided by increasing the capacity of the model. We may avoid high variance using several approaches.
-
-We may impose hard constraints, e.g. by selecting a less expressive hypothesis class: Bayesian networks with at most $$d$$ parents or pairwise (rather than arbitrary-order) MRFs. We may also introduce a soft preference for "simpler" models by adding a regularizer term $$R(p)$$ to the loss $$L(x,p)$$, which will penalize overly complex $$p$$.
-
-### Generalization error
-
-At training, we minimize empirical loss
-
-$$ \frac{1}{|D|} \sum_{x \in D} \log p(x). $$
-
-However, we are actually interested in minimizing
-
-$$ \E_{x \sim p^*} [ \log p(x) ]. $$
-
-We cannot guarantee with certainty the quality of our learned model. This is because the data $$D$$ is sampled stochastically from $$p^*$$, and we might get an unlucky sample. The goal of learning theory is to prove that the model is approximately correct: for most $$D$$, the learning procedure returns a model whose error is low. There exist a vast literature that quantifies the probability of observing a given error between the empirical and the expected loss given a particular type of model and a particular dataset size.
 
 ## Maximum likelihood learning in Bayesian networks
 
